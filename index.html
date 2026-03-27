@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding Invitation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f8f5f2;
+      color: #333;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 2.5em; margin-bottom: 10px; }
+    .photo { width: 100%; border-radius: 12px; margin: 20px 0; }
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background: #d4a373;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { background: #b5835a; }
+    form { margin-top: 20px; }
+    input, select {
+      padding: 10px;
+      margin: 8px;
+      width: 80%;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>You're Invited!</h1>
+    <p>Together with their families</p>
+    <h2>Juan & Maria</h2>
+    <p>Invite you to celebrate their wedding</p>
+    <p><strong>Date:</strong> June 20, 2026</p>
+    <p><strong>Venue:</strong> Dream Garden Resort</p>
+
+    <img src="wedding-photo.jpg" alt="Wedding Photo" class="photo">
+
+    <a href="wedding-photo.jpg" download class="btn">Download Photo</a>
+
+    <h2>RSVP</h2>
+    <form id="rsvpForm">
+      <input type="text" id="name" placeholder="Your Name" required><br>
+      <select id="attendance" required>
+        <option value="">Will you attend?</option>
+        <option value="Yes">Yes, I will attend</option>
+        <option value="No">Sorry, can't make it</option>
+      </select><br>
+      <input type="number" id="guests" placeholder="Number of Guests" min="1"><br>
+      <button type="submit" class="btn">Submit RSVP</button>
+    </form>
+
+    <p id="responseMessage"></p>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const attendance = document.getElementById('attendance').value;
+      const guests = document.getElementById('guests').value || 0;
+
+      const data = { name, attendance, guests };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        document.getElementById('responseMessage').innerText =
+          `Thank you, ${name}! Your RSVP has been recorded.`;
+
+        document.getElementById('rsvpForm').reset();
+      } catch (error) {
+        document.getElementById('responseMessage').innerText =
+          "Error submitting RSVP. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>
